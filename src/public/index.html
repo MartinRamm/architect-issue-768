@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Architect Issue 768</title>
+</head>
+<body>
+<button>Test</button>
+<div>
+    <p><b>Message Log:</b></p>
+</div>
+<script>
+    const button = document.querySelector('button');
+    const log = document.querySelector('div');
+
+    const url = ['localhost', '127.0.0.1', '::1', '0:0:0:0:0:0:0:1'].includes(window.location.hostname)
+        ? 'ws://localhost:3333'
+        : undefined; //TODO replace with actual url displayed in the output of `arc deploy`
+
+    button.addEventListener('click', () => {
+        log.innerHTML += "<hr />"
+
+        if (url === undefined) {
+            log.innerHTML += "<p>Test cannot be executed, please change the code to include the aws websocket url</p>"
+            return;
+        }
+
+        const ws = new WebSocket(url);
+
+        const sendMessage = () => {
+            const message = JSON.stringify({
+                action:"a"
+                ,message:"b"
+            });
+            log.innerHTML += `<p>Sending message: ${message}</p>`;
+            ws.send(message);
+        }
+
+        ws.onopen = () => {
+            log.innerHTML += `<p>Websocket connection opened to ${url}</p>`;
+            sendMessage();
+        };
+
+        ws.onclose = (event) => {
+            log.innerHTML += `<p>Websocket connection to ${url} closed</p>`;
+        };
+
+        ws.onmessage = (event) => {
+            log.innerHTML += `<p>Received message: ${String(event.data)}</p>`;
+            ws.close();
+        };
+    });
+</script>
+</body>
+</html>

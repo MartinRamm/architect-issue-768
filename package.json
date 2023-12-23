@@ -1,0 +1,12 @@
+{
+  "name": "architect-issue-768",
+  "devDependencies": {
+    "@architect/architect": "^10.16.3",
+    "@architect/functions": "^7.0.0",
+    "@architect/plugin-typescript": "^1.2.0",
+    "typescript": "^5.3.2"
+  },
+  "dependencies": {
+    "source-map-support": "^0.5.21"
+  }
+}
